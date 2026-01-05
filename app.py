@@ -19,8 +19,8 @@ app.mount(
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
 
-genai.configure(api_key="API key 1")
-model = genai.GenerativeModel("gemini-pro")
+genai.configure(api_key="AIzaSyDEHwokOlC0J1zdg_PmI7BG_bCKaNJfWAQ")
+model = genai.GenerativeModel("gemini-1.5-flash-latest")
 
 with open(os.path.join(BASE_DIR, "products.json"), "r") as f:
     products = json.load(f)
