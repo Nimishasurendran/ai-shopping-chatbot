@@ -8,7 +8,7 @@ import os
 
 app = FastAPI()
 
-# ✅ STATIC FILES (THIS FIXES 404)
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app.mount(
     "/static",
@@ -18,11 +18,10 @@ app.mount(
 
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
-# ⚠️ NEVER hardcode API keys (temporary only)
+
 genai.configure(api_key="API key 1")
 model = genai.GenerativeModel("gemini-pro")
 
-# Load products
 with open(os.path.join(BASE_DIR, "products.json"), "r") as f:
     products = json.load(f)
 
@@ -37,7 +36,6 @@ def home(request: Request):
 async def chat(user_message: dict):
     msg = user_message["message"].lower()
 
-    # Show products
     if "show" in msg or "products" in msg:
         return {
             "reply": "\n".join(
@@ -46,7 +44,6 @@ async def chat(user_message: dict):
             )
         }
 
-    # Add to cart
     if "add" in msg:
         for p in products:
             if p["name"].lower() in msg:
@@ -62,7 +59,6 @@ async def chat(user_message: dict):
                 else:
                     return {"reply": "Sorry, product out of stock"}
 
-    # Checkout / confirm order
     if "checkout" in msg or "confirm" in msg:
         if not cart:
             return {"reply": "Your cart is empty"}
@@ -81,7 +77,5 @@ async def chat(user_message: dict):
         return {
             "reply": f"Order confirmed with Total price: ₹{total_price}"
         }
-
-    # AI fallback
     response = model.generate_content(msg)
     return {"reply": response.text}
